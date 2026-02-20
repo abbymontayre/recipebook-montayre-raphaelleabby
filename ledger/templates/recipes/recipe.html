@@ -2,10 +2,10 @@
 {% load static %}
 
 {% block content %}
-<h3>{{name}}</h3>
+<h3>{{ name }}</h3>
 <ul> 
   {% for ingredient in ingredients %}
-  <li>{{ingredient.name}} - {{ingredient.quantity}}</li>
+  <li>{{ ingredient }}</li>
   {% endfor %}
 </ul>
 {% endblock %}
