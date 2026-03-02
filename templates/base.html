@@ -1,20 +1,24 @@
 <!DOCTYPE html>
     <head>
         <link rel="stylesheet" href="style.css">
-        <title>{% block title %}Recpie Book{% endblock %}</title>
+        <title>{% block title %}Recipe Book{% endblock %}</title>
         {% block styles %} {% endblock %}
     </head>
 
     <body>
-        {% if user.is_authenticated %}
-            {% include 'registration/logout.html' %}
-        {% else %}
-            <a href = "{% url 'login' %}">Login</a>
-        {% endif %}
-        
-        {% block header%} 
+        <header>
             <h2>Recipe Book</h2>
-        {%endblock%}
+            {% block header_auth %}
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                {% endif %}
+            {% endblock %}
+        </header>
         
         <div id="content">
             {% block content %} {% endblock %}
