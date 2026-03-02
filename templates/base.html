@@ -6,9 +6,16 @@
     </head>
 
     <body>
+        {% if user.is_authenticated %}
+            {% include 'registration/logout.html' %}
+        {% else %}
+            <a href = "{% url 'login' %}">Login</a>
+        {% endif %}
+        
         {% block header%} 
             <h2>Recipe Book</h2>
         {%endblock%}
+        
         <div id="content">
             {% block content %} {% endblock %}
         </div>
