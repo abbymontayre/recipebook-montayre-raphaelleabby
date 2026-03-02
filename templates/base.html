@@ -18,8 +18,8 @@
                     <a href="{% url 'login' %}">Login</a>
                 {% endif %}
             {% endblock %}
+            <h3>{% block page_heading %}{% endblock %}</h3>
         </header>
-        
         <div id="content">
             {% block content %} {% endblock %}
         </div>
