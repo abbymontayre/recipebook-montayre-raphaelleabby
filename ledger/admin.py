@@ -1,5 +1,21 @@
 from django.contrib import admin
-from .models import Ingredient, Recipe, RecipeIngredient
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
+from .models import Ingredient, Profile, Recipe, RecipeIngredient
+
+
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    can_delete = False
+    extra = 0
+
+
+class UserAdmin(BaseUserAdmin):
+    inlines = [ProfileInline]
+
+
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
 
 
 class RecipeIngredientInline(admin.TabularInline):
@@ -7,13 +23,42 @@ class RecipeIngredientInline(admin.TabularInline):
     fields = ("ingredient", "quantity")
 
 
-@admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ("name",)
+    model = Recipe
+    list_display = ("id", "name", "author_name")
+    list_display_links = ("id", "name")
     search_fields = ("name",)
+    list_filter = ("created_on", "updated_on")
     inlines = [RecipeIngredientInline]
+    fieldsets = [
+        (
+            "Details",
+            {
+                "fields": [
+                    ("name", "author"),
+                ]
+            },
+        ),
+    ]
+
+    @admin.display(description="author")
+    def author_name(self, obj):
+        if obj.author_id and obj.author:
+            return obj.author.name
+        return "(No author)"
 
 
-@admin.register(Ingredient)
+class ProfileAdmin(admin.ModelAdmin):
+    model = Profile
+    list_display = ("name", "user")
+    search_fields = ("name", "user__username")
+
+
 class IngredientAdmin(admin.ModelAdmin):
+    model = Ingredient
     search_fields = ("name",)
+
+
+admin.site.register(Recipe, RecipeAdmin)
+admin.site.register(Profile, ProfileAdmin)
+admin.site.register(Ingredient, IngredientAdmin)
