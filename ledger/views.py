@@ -18,6 +18,7 @@ def recipe_detail(request, pk):
     recipe = Recipe.objects.get(pk=pk)
     ingredients = recipe.ingredients.all()
     context = {
+        'recipe_id': recipe.pk,
         'name': str(recipe),
         'author': recipe.author.name,
         'ingredients': ingredients,
