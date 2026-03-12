@@ -1,6 +1,5 @@
 from django.db import models
-from datetime import datetime
-from django.urls import *
+from django.urls import reverse
 from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator
 
@@ -37,6 +36,17 @@ class Recipe(models.Model):
 
     def get_absolute_url(self):
         return reverse('ledger:recipe', args=[str(self.pk)])
+
+
+class RecipeImage(models.Model):
+    image = models.ImageField(upload_to='images/', null=False)
+    description = models.CharField(max_length=255)
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE, related_name="image"
+    )
+
+    def __str__(self):
+        return self.description
 
 
 class RecipeIngredient(models.Model):
